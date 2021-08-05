@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Board">
+
+	<select id="select_list" parameterType="map" resultType="com.koreait.board.BoardDTO">
+		select b_idx as idx, b_userid as userid, b_title as title, b_regdate as regdate, b_hit as hit, b_like as likes, b_file as file from tb_board order by b_idx desc limit ${start}, ${pagePerCount}
+	</select>
+
+	<select id="replyCount" parameterType="map" resultType="map">
+		select count(re_idx) as replycnt from tb_reply where re_boardidx=${b_idx};
+	</select>
+  
+  <insert id="write" parameterType="map">
+	insert into tb_board(b_userid, b_title, b_content, b_file) 
+	values(#{b_userid}, #{b_title}, #{b_content}, #{b_file})
+  </insert>
+ 
+  <update id="update_view" parameterType="map">
+	update tb_board set b_hit = b_hit + 1 where b_idx=#{b_idx}
+  </update>
+  
+  <select id="select_view" parameterType="map" resultType="map">
+	select b_idx, b_userid, b_title, b_content, b_regdate, b_like, b_hit, b_file from tb_board where b_idx=#{b_idx}
+  </select>
+   
+  <select id="totCount" resultType="int">
+  	select count(b_idx) as total from tb_board
+  </select>
+  
+  <delete id="delete" parameterType="String">
+  	delete 
+  	from tb_board 
+  	where b_idx=#{b_idx}
+  </delete>
+  
+  <update id="update_like_ok" parameterType="map">
+  	update tb_board set b_like = b_like + 1 where b_idx=#{b_idx}
+  </update>
+  
+  <select id="select_like_ok" parameterType="map" resultType="map">
+  	select b_like from tb_board where b_idx=#{b_idx}
+  </select>
+  
+  <update id="edit_ok_file" parameterType="map">
+  	update tb_board set b_title=#{b_title}, b_content=#{b_content}, b_file=#{b_file} where b_idx=#{b_idx}
+  </update>
+  
+  <update id="edit_ok_file_null" parameterType="map">
+  	update tb_board set b_title=#{b_title}, b_content=#{b_content} where b_idx=#{b_idx}
+  </update>
+  
+  <insert id="writeReply" parameterType="map">
+  	insert into tb_reply(re_userid, re_content, re_boardidx) 
+  	values(#{re_userid}, #{re_content}, #{re_boardIdx})
+  </insert>
+  
+  <select id="selectReply" parameterType="map" resultType="com.koreait.board.ReplyDTO">
+  	select re_idx as idx, re_userid as userid, re_content as content, re_regdate as regdate, re_boardIdx as boardIdx
+  	from tb_reply
+  	where re_boardidx=#{b_idx}
+  	order by re_idx desc
+  </select>
+  
+  <delete id="deleteReply" parameterType="map">
+  	delete from tb_reply where re_idx=#{idx}
+  </delete>
+  
+</mapper>
