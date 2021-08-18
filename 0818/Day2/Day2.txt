@@ -1,0 +1,99 @@
+Lombok
+- 라이브러리(이클립스에서 쓰려면 까다로움 - market place에서 찾아서 다운받아야 함)
+- 테이블을 구조화한 도메인 클래스
+(Entity-필드요소, DTO-데이터를저장하는객체, VO-데이터를저장하는요소(모두 객체))에서
+getter/setter 메소드와 toString, equals, hashCode 등의
+메소드를 어노테이션으로 사용할 수 있도록 해주는 라이브러리
+- 다운로드 받을 수 있는 사이트 , 사용법 : https://projectlombok.org/
+- 우리는 install할 피용없다 이미 누러서 들어와서
+- build.gradle 살펴보면 lombok이 이미 추가되어있음
+
+- lombok의 어노테이션들(코딩할 피료음서짐)
+@Data   // 내부적으로 get과set 만들어짐
+@AllArgsConstructor // 다 파라미터로 쓸 수 있는 생성자가 만들어짐
+@NoArgsConstructor  // 파라미터가 아무것도 없는 생성자가 만들어짐
+@Builder : 복합객체의 생성 과정과 표현 방법을 분리하여 동일한 생성 절차에서
+서로다른 결과를 만들 수 있게 하는 패턴을 사용할 수 있음
+
+
+JPA(Java Persistance API)
+- 자바의 ORM 기술 표준
+- 객체를 DB에 저장하고 관리할 때 개발자가 직접 SQL을 작성하지 않아도 됨
+- JPA가 개발자를 대신해 적절한 SQL을 생성해 DB에 전달하고 객체를 자동으로 매핑해줌
+- 자칫 쿼리가 꼬이고 쓸데없는 join이 생겨벌임(설계, 관리를 잘해야 속도가 느려지지x)
+- 하이버 어쭈구...? -> 바로 미테이슴
+
+Hibernate -> JPA를 쓰면 마이바티스를 쓰는게 아니라 얘를 쓰게됨.
+- ORM 프레임워크 중 가장 많이 사용되는 프레임워크
+
+🪓 ORM(Object-Relational Mapping)
+- 객체와 관계형 DB를 매핑
+- 객체를 마치 자바 컬렉션에 저장할 수 있고 적절한 SQL을 생성해서 DB에 저장
+
+자바의 변수
+Camel Case : 단어를 표기할 때 첫문자는 소문자로 시작하고 띄어쓰기 대신 대문자로 단어를 구분
+    numKor, numEng, ...
+    memIdx
+
+DB테이블, API, 통신규격
+Snake Case : 단어를 표기할 때 모두 소문자로 표기하며, 띄어쓰기 대신 언더바(_)로 표기
+    tb_member, vw_mem_select, ..
+    mem_idx
+
+@Entity
+- JPA에서 테이블을 자동으로 관리해주는 기능을 가진 객체를 생성하는 어노테이션
+    JPA Entity <----> Database DBTable
+
+@Id : 기본키 매핑
+@GeneratiedValue : 값 설정
+- insert 쿼리 전에 hibernate_sequence 테이블의 데이터에 대하여 select , update 쿼리가 실행되며 id생성을
+위해 hibernate_sequence 테이블의 시퀀스 값을 가져와 업데이트하고 그 값으로 id를 생성하여 insert 쿼리에 사용
+
+
+
+
+오라클 클라우드 프리티어 사이트
+https://www.oracle.com/kr/cloud/free/
+전자지갑 없어졌을 경우 재발급
+
+구글 검색창에 검색 -> oracle 19c gradle dependency -> build.gradle 에 추가
+build 시킴 -> 설치해야함
+    build.gradle 에 아래 붙여넣기 후 코끼리 달리기시킴
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
+
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+    implementation 'com.oracle.ojdbc:ucp'
+    implementation 'com.oracle.database.security:oraclepki'
+    implementation 'com.oracle.database.security:osdt_core'
+    implementation 'com.oracle.database.security:osdt_cert'
+
+jUnit
+- java에서 독립된 단위테스트(Unit Test)를 지원해주는 프레임워크
+- test 폴더가 그 기능
+- @test 어노테이션을 통해 메소드단위로 테스트가 가능
+
+Unit Test
+- 소스코드의 특정 모듈이 의도된데로 정확히 작동하는지 검증하는 절차
+- 모든 함수와 메소드에 대한 테스트 케이스(Test Case)를 작성하는 절차
+
+
+@Autowired
+- 필요한 의존 객체의 "타입에" 해당하는 번을 찾아 주입함
+- 생성자, setter, 필드
+- 의존성 주입이라고 부름
+- beans를 만들어주는 역할
+
+DTO에 저장되어있는 내용을 AdminUserRepositoy 에 저장시키고
+자동으로 테이블의 컬럼에 담아주게 된다. 그렇게 해서 save시킨 객체를 리턴시킴.
+자동으로 insert 하이버네이트에 자동으로 insert 구문이 만들어지는 것임.
+
+
+과제. User 클래스에 데이터를 Oracle 에 저장하는 단위테스트 메소드를 작성
+(id는 시퀀스로 일렬번호 등록)
+- 클래스와 리포지토리를 별도로 만듬.
+- 오라클에서도 user 테이블 만들어줌
